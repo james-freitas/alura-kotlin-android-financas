@@ -2,6 +2,7 @@ package br.com.alura.financask.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import br.com.alura.financask.R
@@ -17,13 +18,17 @@ import kotlinx.android.synthetic.main.activity_lista_transacoes.*
 class ListaTransacoesActivity : AppCompatActivity() {
 
     private val transacoes: MutableList<Transacao> = mutableListOf()
-    private var viewDaActivity: View? = null
+    private val viewDaActivity by lazy {
+        window.decorView
+    }
+
+    private val viewGroupDaActivity by lazy {
+        viewDaActivity as ViewGroup
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_transacoes)
-
-        viewDaActivity = window.decorView
 
         configuraResumo()
         configuraLista()
@@ -42,7 +47,7 @@ class ListaTransacoesActivity : AppCompatActivity() {
     }
 
     private fun chamaDialogDeAdicao(tipo: Tipo) {
-        AdicionaTransacaoDialog(viewDaActivity as ViewGroup, this)
+        AdicionaTransacaoDialog(viewGroupDaActivity, this)
                 .chama(tipo, object : TransacaoDelegate {
                     override fun delegate(transacao: Transacao) {
                         adiciona(transacao)
@@ -78,7 +83,7 @@ class ListaTransacoesActivity : AppCompatActivity() {
     }
 
     private fun chamaDialogDeAlteracao(transacao: Transacao, posicao: Int) {
-        AlteraTransacaoDialog(viewDaActivity as ViewGroup, this)
+        AlteraTransacaoDialog(viewGroupDaActivity, this)
                 .chama(transacao, object : TransacaoDelegate {
                     override fun delegate(transacao: Transacao) {
                         altera(transacao, posicao)
